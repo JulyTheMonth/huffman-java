@@ -89,7 +89,8 @@ public class HuffmanCodec {
         return this.codec.entrySet().stream().map(es -> es.getKey() + ":" + es.getValue()).collect(Collectors.joining("-"));
     }
 
-    public HashMap<Integer, String> getCodec() {
-        return codec;
+    public String getBytesForAscii(int asciiCode){
+        return this.codec.get(asciiCode);
     }
+
 }
