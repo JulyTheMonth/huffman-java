@@ -11,6 +11,7 @@ public class FileManager {
     final String ASCIIFILE = "asciFile.txt";
     final String CODECFILE = "dec_tab.txt";
     final String OUTPUTFILE = "output.dat";
+    final String DECOMPRESS = "decompress.txt";
 
     public FileManager(String directory) {
         this.directory = Path.of(directory);
@@ -26,7 +27,7 @@ public class FileManager {
     }
 
 
-    public boolean writeCodec(String codec) {
+    public void writeCodec(String codec) {
         try {
             Path path = this.directory.resolve(CODECFILE);
             FileWriter fw = new FileWriter(path.toFile());
@@ -36,24 +37,56 @@ public class FileManager {
             System.out.println("File saved at: " + path.toString());
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return false;
         }
 
-        return true;
     }
 
-    public boolean writeByteArray(byte[] out) {
+    public void writeByteArray(byte[] out) {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(this.directory.resolve(OUTPUTFILE).toString());
             fos.write(out);
             fos.close();
-            return true;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
+    }
+
+    public byte[] readEncodedFile() {
+        File file = new File(this.directory.resolve(OUTPUTFILE).toString());
+        byte[] bFile = new byte[(int) file.length()];
+
+
+        try {
+            FileInputStream fis = new FileInputStream(file);
+
+            fis.read(bFile);
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bFile;
+    }
+
+    public String readCodec() {
+        try {
+            return Files.readString(this.directory.resolve(CODECFILE));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void writeDecompress(String toString) {
+        try {
+            Path path = this.directory.resolve(DECOMPRESS);
+            FileWriter fw = new FileWriter(path.toFile());
+            PrintWriter pw = new PrintWriter(fw);
+            pw.print(toString);
+            pw.close();
+            System.out.println("File saved at: " + path.toString());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
